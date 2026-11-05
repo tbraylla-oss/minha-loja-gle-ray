@@ -1,0 +1,649 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja Virtual</title>
+
+    <style>
+        /* CONFIGURAÇÕES GERAIS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+            transition: 0.3s;
+        }
+
+        body.escuro {
+            background: #181818;
+            color: #fff;
+        }
+
+        header {
+            background: #ffffff;
+            color: #222;
+            padding: 18px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .escuro header,
+        .escuro footer {
+            background: #252525;
+            color: white;
+        }
+
+        .logo {
+            color: #e85d04;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #e85d04;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 14px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+        }
+
+        .pesquisa {
+            display: flex;
+            gap: 5px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            max-width: 100%;
+        }
+
+        .principal {
+            background: #e85d04;
+            color: white;
+        }
+
+        /* CARROSSEL */
+        .carrossel {
+            position: relative;
+            height: 350px;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .slide.ativo {
+            display: flex;
+            animation: aparecer 0.7s;
+        }
+
+        .slide div {
+            background: rgba(0, 0, 0, 0.55);
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .slide h2 {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .seta {
+            position: absolute;
+            top: 45%;
+            background: rgba(0, 0, 0, 0.65);
+            color: white;
+            font-size: 22px;
+        }
+
+        .anterior { left: 15px; }
+        .proximo { right: 15px; }
+
+        @keyframes aparecer {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+
+        /* PRODUTOS */
+        section {
+            padding: 40px 5%;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .produtos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .produto {
+            background: white;
+            color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px #0001;
+            transition: 0.3s;
+        }
+
+        .escuro .produto {
+            background: #252525;
+            color: white;
+        }
+
+        .produto:hover {
+            transform: translateY(-5px);
+        }
+
+        .produto img {
+            width: 100%;
+            height: 190px;
+            object-fit: contain;
+            background: white;
+        }
+
+        .produto-imagens {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            height: 190px;
+            background: white;
+        }
+
+        .produto-imagens img {
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .detalhes {
+            padding: 16px;
+        }
+
+        .detalhes h3 {
+            margin-bottom: 10px;
+        }
+
+        .preco {
+            color: #e85d04;
+            font-size: 21px;
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        .detalhes button {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .mensagem {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* CARRINHO */
+        .carrinho {
+            background: white;
+            color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .escuro .carrinho {
+            background: #252525;
+            color: white;
+        }
+
+        .item-carrinho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        /* RODAPÉ */
+        footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+        footer a {
+            color: #ff9b54;
+            text-decoration: none;
+            margin: 8px;
+            display: inline-block;
+        }
+
+        .assinatura {
+            margin-top: 12px;
+            color: #ff9b54;
+            font-style: italic;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 900px) {
+            .produtos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            header {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .produtos {
+                grid-template-columns: 1fr;
+            }
+
+            .carrossel {
+                height: 350px;
+            }
+
+            .slide h2 {
+                font-size: 25px;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .pesquisa {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .pesquisa input {
+                width: 65%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+    <header>
+        <div class="logo">Minha Loja</div>
+
+        <nav>
+            <a href="#inicio">Início</a>
+            <a href="#produtos">Produtos</a>
+            <a href="#carrinho">Carrinho</a>
+            <a href="#contato">Contato</a>
+        </nav>
+
+        <form class="pesquisa" id="formPesquisa">
+            <input type="search" id="pesquisa"
+                   placeholder="Pesquisar produto...">
+            <button class="principal" type="submit">Buscar</button>
+        </form>
+
+        <button id="tema">🌙 Tema</button>
+        <a href="#carrinho">
+            <button class="principal">
+                🛒 <span id="contador">0</span>
+            </button>
+        </a>
+    </header>
+
+    <!-- CARROSSEL -->
+    <main>
+        <div class="carrossel" id="inicio">
+
+            <div class="slide ativo"
+                style="background-image:url('./img%20carrossel/foto.jpg')">
+                <div>
+                    <h2>Bem-vindo à Minha Loja!</h2>
+                    <p>Encontre os melhores produtos aqui.</p>
+                </div>
+            </div>
+
+            <div class="slide"
+                style="background-image:url('./img%20carrossel/foto2.jpg')">
+                <div>
+                    <h2>Ofertas especiais</h2>
+                    <p>Aproveite nossas ofertas demonstrativas!</p>
+                </div>
+            </div>
+
+            <button class="seta anterior" id="anterior"
+                    aria-label="Banner anterior">❮</button>
+            <button class="seta proximo" id="proximo"
+                    aria-label="Próximo banner">❯</button>
+        </div>
+
+        <!-- PRODUTOS -->
+        <section id="produtos">
+            <h2>Nossos Produtos</h2>
+
+            <div class="produtos" id="listaProdutos">
+
+                <article class="produto" data-nome="Camiseta">
+                    <div class="produto-imagens">
+                        <img src="./img%20cart%C3%A3o/OIP.webp"
+                             alt="Camisetas de manga longa em várias cores">
+                        <img src="./img%20cart%C3%A3o/51D%2Bcow7x7L._AC_SX385_.jpg"
+                             alt="Camiseta preta de manga longa">
+                    </div>
+                    <div class="detalhes">
+                        <h3>Camiseta</h3>
+                        <p>Camiseta confortável para o dia a dia.</p>
+                        <p class="preco">R$ 59,90</p>
+                        <button class="principal comprar"
+                                data-id="1">Comprar agora</button>
+                    </div>
+                </article>
+
+                <article class="produto" data-nome="Tênis">
+                    <img src="./img%20cart%C3%A3o/uv%202.webp"
+                         alt="Conjunto infantil azul com estampa de animais marinhos">
+                    <div class="detalhes">
+                        <h3>Tênis</h3>
+                        <p>Modelo esportivo para seu conforto.</p>
+                        <p class="preco">R$ 199,90</p>
+                        <button class="principal comprar"
+                                data-id="2">Comprar agora</button>
+                    </div>
+                </article>
+
+                <article class="produto" data-nome="Mochila">
+                    <img src="./img%20cart%C3%A3o/uv%203%20bb%20f.webp"
+                         alt="Blusa infantil rosa de manga longa">
+                    <div class="detalhes">
+                        <h3>Mochila</h3>
+                        <p>Prática para trabalho e estudos.</p>
+                        <p class="preco">R$ 89,90</p>
+                        <button class="principal comprar"
+                                data-id="3">Comprar agora</button>
+                    </div>
+                </article>
+
+                <article class="produto" data-nome="Relógio">
+                    <img src="./img%20cart%C3%A3o/uv%20bb.webp"
+                         alt="Criança usando roupa azul estampada na praia">
+                    <div class="detalhes">
+                        <h3>Relógio</h3>
+                        <p>Design moderno para todas as ocasiões.</p>
+                        <p class="preco">R$ 149,90</p>
+                        <button class="principal comprar"
+                                data-id="4">Comprar agora</button>
+                    </div>
+                </article>
+
+            </div>
+
+            <p class="mensagem" id="mensagem"></p>
+        </section>
+
+        <!-- CARRINHO -->
+        <section id="carrinho">
+            <h2>🛒 Meu Carrinho</h2>
+
+            <div class="carrinho">
+                <div id="itensCarrinho">
+                    Seu carrinho está vazio.
+                </div>
+
+                <h3 style="margin-top:20px">
+                    Total: <span id="total">R$ 0,00</span>
+                </h3>
+
+                <button class="principal" id="finalizar"
+                        style="margin-top:15px">
+                    Finalizar pedido
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer id="contato">
+        <h2>Minha Loja</h2>
+        <p>Entre em contato e acompanhe nossas novidades.</p>
+
+        <div>
+            <a href="https://www.instagram.com/" target="_blank"
+               rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.facebook.com/" target="_blank"
+               rel="noopener noreferrer">Facebook</a>
+            <a href="https://www.tiktok.com/" target="_blank"
+               rel="noopener noreferrer">TikTok</a>
+            <a href="https://wa.me/5511999999999" target="_blank"
+               rel="noopener noreferrer">WhatsApp</a>
+        </div>
+
+        <p>Contato: contato@minhaloja.com</p>
+        <p>&copy; 2026 Minha Loja. Todos os direitos reservados.</p>
+        <p class="assinatura">Feito por Gleiton</p>
+    </footer>
+
+    <script>
+        // CARROSSEL AUTOMÁTICO
+        const slides = document.querySelectorAll(".slide");
+        let slideAtual = 0;
+
+        function mostrarSlide(indice) {
+            slides[slideAtual].classList.remove("ativo");
+
+            slideAtual = (indice + slides.length) % slides.length;
+
+            slides[slideAtual].classList.add("ativo");
+        }
+
+        document.getElementById("anterior").onclick = () => {
+            mostrarSlide(slideAtual - 1);
+        };
+
+        document.getElementById("proximo").onclick = () => {
+            mostrarSlide(slideAtual + 1);
+        };
+        
+        setInterval(() => {
+            mostrarSlide(slideAtual + 1);
+        }, 4000);
+
+        // MODO CLARO E ESCURO
+        const botaoTema = document.getElementById("tema");
+
+        botaoTema.addEventListener("click", () => {
+            document.body.classList.toggle("escuro");
+
+            const escuro = document.body.classList.contains("escuro");
+
+            botaoTema.textContent = escuro ? "☀️ Tema" : "🌙 Tema";
+            localStorage.setItem("temaEscuro", escuro);
+        });
+
+        if (localStorage.getItem("temaEscuro") === "true") {
+            document.body.classList.add("escuro");
+            botaoTema.textContent = "☀️ Tema";
+        }
+
+        // DADOS DOS PRODUTOS
+        const produtos = [
+            { id: 1, nome: "Camiseta", preco: 59.90 },
+            { id: 2, nome: "Tênis", preco: 199.90 },
+            { id: 3, nome: "Mochila", preco: 89.90 },
+            { id: 4, nome: "Relógio", preco: 149.90 }
+        ];
+
+        let carrinho = [];
+
+        // ADICIONAR PRODUTOS
+        document.querySelectorAll(".comprar").forEach(botao => {
+            botao.addEventListener("click", () => {
+                const id = Number(botao.dataset.id);
+                const produto = produtos.find(p => p.id === id);
+
+                const item = carrinho.find(p => p.id === id);
+
+                if (item) {
+                    item.quantidade++;
+                } else {
+                    carrinho.push({
+                        ...produto,
+                        quantidade: 1
+                    });
+                }
+
+                atualizarCarrinho();
+
+                document.getElementById("mensagem").textContent =
+                    produto.nome + " adicionado ao carrinho!";
+            });
+        });
+
+        // ATUALIZAR CARRINHO
+        function atualizarCarrinho() {
+            const area = document.getElementById("itensCarrinho");
+            const contador = document.getElementById("contador");
+            const total = document.getElementById("total");
+
+            area.innerHTML = "";
+
+            if (carrinho.length === 0) {
+                area.textContent = "Seu carrinho está vazio.";
+            }
+
+            let valorTotal = 0;
+            let quantidadeTotal = 0;
+
+            carrinho.forEach(item => {
+                valorTotal += item.preco * item.quantidade;
+                quantidadeTotal += item.quantidade;
+
+                const linha = document.createElement("div");
+                linha.className = "item-carrinho";
+
+                const nome = document.createElement("span");
+                nome.textContent =
+                    `${item.nome} — ${item.quantidade} x ` +
+                    item.preco.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL"
+                    });
+
+                const remover = document.createElement("button");
+                remover.textContent = "Remover";
+                remover.className = "principal";
+
+                remover.addEventListener("click", () => {
+                    item.quantidade--;
+
+                    if (item.quantidade <= 0) {
+                        carrinho = carrinho.filter(
+                            p => p.id !== item.id
+                        );
+                    }
+
+                    atualizarCarrinho();
+                });
+
+                linha.append(nome, remover);
+                area.appendChild(linha);
+            });
+
+            contador.textContent = quantidadeTotal;
+
+            total.textContent = valorTotal.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        // PESQUISAR PRODUTOS
+        document.getElementById("formPesquisa")
+            .addEventListener("submit", evento => {
+                evento.preventDefault();
+
+                const termo = document.getElementById("pesquisa")
+                    .value.trim().toLowerCase();
+
+                let encontrados = 0;
+
+                document.querySelectorAll(".produto").forEach(card => {
+                    const nome = card.dataset.nome.toLowerCase();
+                    const visivel = nome.includes(termo);
+
+                    card.style.display = visivel ? "" : "none";
+
+                    if (visivel) encontrados++;
+                });
+
+                document.getElementById("mensagem").textContent =
+                    encontrados === 0
+                        ? "Nenhum produto encontrado."
+                        : encontrados + " produto(s) encontrado(s).";
+
+                document.getElementById("produtos")
+                    .scrollIntoView({ behavior: "smooth" });
+            });
+
+        // FINALIZAR PEDIDO DEMONSTRATIVO
+        document.getElementById("finalizar")
+            .addEventListener("click", () => {
+                if (carrinho.length === 0) {
+                    alert("Adicione produtos ao carrinho primeiro!");
+                    return;
+                }
+
+                alert(
+                    "Pedido demonstrativo realizado!\n" +
+                    "Total: " + document.getElementById("total").textContent +
+                    "\nPara vender de verdade, integre um sistema de pagamento."
+                );
+            });
+    </script>
+
+</body>
+</html>
